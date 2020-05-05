@@ -2,45 +2,67 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RandomMove : MonoBehaviour
+public class AgentMove : MonoBehaviour
 {
     private int direction;
     public float workplace_x = 0;
     public float workplace_z = 0;
+    private bool shouldMove = false;
+    private RoadManager roadManager;
+    private GameObject curRoad;
 
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("UpdateDirection", 2, 0.5f);
+        //InvokeRepeating("UpdateDirection", 2, 0.5f);
+        roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
         float speed = 10.0f;
-        // Up-down angle
-        // 0: up
-        // 1: right
-        // 2: down
-        // 3: left
-        switch(direction)
+        //// Up-down angle
+        //// 0: up
+        //// 1: right
+        //// 2: down
+        //// 3: left
+        //switch(direction)
+        //{
+        //    case 0:
+        //        transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        //        break;
+        //    case 1:
+        //        transform.Translate(Vector3.right * Time.deltaTime * speed);
+        //        break;
+        //    case 2:
+        //        transform.Translate(Vector3.forward * Time.deltaTime * -speed);
+        //        break;
+        //    case 3:
+        //        transform.Translate(Vector3.right * Time.deltaTime * -speed);
+        //        break;
+        //    default:
+        //        break;
+        //}
+        if (shouldMove)
         {
-            case 0:
-                transform.Translate(Vector3.forward * Time.deltaTime * speed);
-                break;
-            case 1:
+            if (curRoad.transform.rotation.y == 90)
+            {
                 transform.Translate(Vector3.right * Time.deltaTime * speed);
-                break;
-            case 2:
+            } else
+            {
                 transform.Translate(Vector3.forward * Time.deltaTime * -speed);
-                break;
-            case 3:
-                transform.Translate(Vector3.right * Time.deltaTime * -speed);
-                break;
-            default:
-                break;
+            }
+
+           
         }
-        
+    }
+
+    public void SetMoveSignal(GameObject road, Vector3 startPos)
+    {
+        transform.position = startPos;
+        curRoad = road;
+        shouldMove = true;
     }
 
     void UpdateDirection()
