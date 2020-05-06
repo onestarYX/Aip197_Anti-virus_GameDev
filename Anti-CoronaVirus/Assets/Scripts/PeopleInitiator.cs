@@ -5,42 +5,30 @@ using UnityEngine;
 public class PeopleInitiator : MonoBehaviour
 {
     public GameObject personPrefab;
-    private List<Vector3> housesPositions = new List<Vector3>();
     public List<GameObject> people = new List<GameObject>();
-    public int pplPerHouse = 10;
+    public int pplPerHouse = 1;
     private RoadManager roadManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        housesPositions.Add(new Vector3(60, 0.5f, 60));
-        //housesPositions.Add(new Vector3(60, 0.5f, 0));
-        //housesPositions.Add(new Vector3(60, 0.5f, -60));
-        //housesPositions.Add(new Vector3(0, 0.5f, -60));
-        //housesPositions.Add(new Vector3(-60, 0.5f, -60));
-        //housesPositions.Add(new Vector3(-60, 0.5f, 0));
-        //housesPositions.Add(new Vector3(-60, 0.5f, 60));
-        //housesPositions.Add(new Vector3(0, 0.5f, 60));
-        float spawnOffset = 5;
+        float spawnOffset = 3;
 
-        foreach (Vector3 housePos in housesPositions)
+        for (int i = 0; i < pplPerHouse; i++)
         {
-            for (int i = 0; i < pplPerHouse; i++)
-            {
-                float initPosX = Random.Range(housePos.x - spawnOffset, housePos.x + spawnOffset);
-                float initPosZ = Random.Range(housePos.z - spawnOffset, housePos.z + spawnOffset);
-                Vector3 initPos = new Vector3(initPosX, 0.5f, initPosZ);
-                GameObject newPerson = Instantiate(personPrefab, initPos, personPrefab.transform.rotation);
-                people.Add(newPerson);
-            }
+            float initPosX = Random.Range(transform.position.x - spawnOffset, transform.position.x + spawnOffset);
+            float initPosZ = Random.Range(transform.position.z - spawnOffset, transform.position.z + spawnOffset);
+            Vector3 initPos = new Vector3(initPosX, 0.5f, initPosZ);
+            GameObject newPerson = Instantiate(personPrefab, initPos, personPrefab.transform.rotation);
+            people.Add(newPerson);
         }
 
         // For test purposes
-        Vector3 curHousePos = housesPositions[0];
         roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
-        GameObject startRoad = findNearestStartRoad(curHousePos);
+        GameObject startRoad = findNearestStartRoad(transform.position);
         AgentMove someAgentMove = people[0].GetComponent<AgentMove>();
-        someAgentMove.SetMoveSignal(startRoad, startRoad.transform.position);
+        someAgentMove.Setup(0, 0, 60, 60, 5);
+        someAgentMove.SetOnRoad(startRoad, startRoad.transform.position);
     }
 
     // Update is called once per frame
