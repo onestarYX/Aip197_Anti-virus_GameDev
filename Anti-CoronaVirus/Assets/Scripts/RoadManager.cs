@@ -8,10 +8,10 @@ public class RoadManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int i = 0;
         foreach(Transform child in transform)
         {
             roads.Add(child.gameObject);
+            Debug.Log("Adding road");
         }
 
     }

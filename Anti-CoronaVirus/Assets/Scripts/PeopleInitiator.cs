@@ -25,10 +25,11 @@ public class PeopleInitiator : MonoBehaviour
 
         // For test purposes
         roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
-        GameObject startRoad = findNearestStartRoad(transform.position);
+        GameObject startRoad = null;
         AgentMove someAgentMove = people[0].GetComponent<AgentMove>();
-        someAgentMove.Setup(0, 0, 60, 60, 5);
-        someAgentMove.SetOnRoad(startRoad, startRoad.transform.position);
+        someAgentMove.Setup(0, 0, transform.position.x, transform.position.z, 5);
+        StartCoroutine(waiter(startRoad, someAgentMove));
+
     }
 
     // Update is called once per frame
@@ -37,8 +38,16 @@ public class PeopleInitiator : MonoBehaviour
         
     }
 
+    IEnumerator waiter(GameObject startRoad, AgentMove someAgentMove)
+    {
+        yield return new WaitForSeconds(10);
+        startRoad = findNearestStartRoad(transform.position);
+        someAgentMove.SetOnRoad(startRoad, startRoad.transform.position + new Vector3(0, 0, 45));
+    }
+
     GameObject findNearestStartRoad(Vector3 pos)
     {
+
         if(roadManager.roads.Count == 0)
         {
             Debug.LogError("error in fetching roads");
@@ -46,4 +55,5 @@ public class PeopleInitiator : MonoBehaviour
 
         return roadManager.roads[0];
     }
+
 }
