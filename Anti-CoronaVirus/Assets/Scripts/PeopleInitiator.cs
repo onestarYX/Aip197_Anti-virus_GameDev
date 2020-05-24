@@ -11,6 +11,7 @@ public class PeopleInitiator : MonoBehaviour
     private float spawnOffset = 3;
     private RoadManager roadManager;
     public GameObject startRoad;
+    public Vector3 startPos;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +30,8 @@ public class PeopleInitiator : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         startRoad = findNearestStartRoad(transform.position);
+        startPos = CalculateStartPos(transform.position, startRoad);
+
         List<AgentMove> agentMoveScriptsList = new List<AgentMove>();
 
         for (int i = 0; i < pplPerHouse; i++)
@@ -50,21 +53,26 @@ public class PeopleInitiator : MonoBehaviour
         for (int i = 0; i < pplPerHouse; i++)
         {
             yield return new WaitForSeconds(3);
-            agentMoveScriptsList[i].SetOnRoad(startRoad, CalculateStartPos(transform.position, startRoad));
+            agentMoveScriptsList[i].SetOnRoad(startRoad, startPos);
         }
     }
 
     Vector3 CalculateStartPos(Vector3 housePos, GameObject startRoad)
     {
-        if (startRoad.transform.rotation.y == 90)
+        if (startRoad.transform.rotation.eulerAngles.y == 90)
         {
-            if (housePos.x < (startRoad.transform.position.x - startRoad.GetComponent<Collider>().bounds.size.z / 2 + startRoad.GetComponent<Collider>().bounds.size.x / 2))
+            if (housePos.x < (startRoad.transform.position.x - startRoad.GetComponent<Collider>().bounds.size.x / 2 + startRoad.GetComponent<Collider>().bounds.size.z / 2))
             {
-                float startPosX = startRoad.transform.position.x - startRoad.GetComponent<Collider>().bounds.size.z / 2 + startRoad.GetComponent<Collider>().bounds.size.x / 2;
+                Debug.Log("LeftBound");
+                float startPosX = startRoad.transform.position.x - startRoad.GetComponent<Collider>().bounds.size.x / 2 + startRoad.GetComponent<Collider>().bounds.size.z / 2;
+                Debug.Log(startRoad.GetComponent<Collider>().bounds.size.z / 2);
+                Debug.Log(startRoad.GetComponent<Collider>().bounds.size.x / 2);
                 return new Vector3(startPosX, personY, startRoad.transform.position.z);
-            } else if (housePos.x > (startRoad.transform.position.x + startRoad.GetComponent<Collider>().bounds.size.z / 2 - startRoad.GetComponent<Collider>().bounds.size.x / 2))
+            } else if (housePos.x > (startRoad.transform.position.x + startRoad.GetComponent<Collider>().bounds.size.x / 2 - startRoad.GetComponent<Collider>().bounds.size.z / 2))
             {
-                float startPosX = startRoad.transform.position.x + startRoad.GetComponent<Collider>().bounds.size.z / 2 - startRoad.GetComponent<Collider>().bounds.size.x / 2;
+                Debug.Log("RightBound");
+                float startPosX = startRoad.transform.position.x + startRoad.GetComponent<Collider>().bounds.size.x / 2 - startRoad.GetComponent<Collider>().bounds.size.z / 2;
+                Debug.Log(startPosX);
                 return new Vector3(startPosX, personY, startRoad.transform.position.z);
             } else
             {
@@ -101,14 +109,20 @@ public class PeopleInitiator : MonoBehaviour
 
         foreach (GameObject road in roadManager.roads)
         {
-            if (road.transform.rotation.y == 90)
-            {
-                dist = Mathf.Abs(pos.z - road.transform.position.z);
-            }
-            else
-            {
-                dist = Mathf.Abs(pos.x - road.transform.position.x);
-            }
+            //if (road.transform.rotation.eulerAngles.y == 90)
+            //{
+            //    dist = Mathf.Abs(pos.z - road.transform.position.z);
+            //}
+            //else
+            //{
+            //    dist = Mathf.Abs(pos.x - road.transform.position.x);
+            //}
+
+            dist = Mathf.Abs(pos.z - road.transform.position.z) + Mathf.Abs(pos.x - road.transform.position.x);
+
+            Debug.Log(road.name);
+            Debug.Log(road.transform.rotation.eulerAngles);
+            Debug.Log(dist);
 
             if (dist < minDist)
             {

@@ -11,7 +11,7 @@ public enum all_states
 
 public class AgentMove : MonoBehaviour
 {
-    private int direction = 3;
+    public int direction = 3;
     private float speed;
     public float workplace_x = 0;
     public float workplace_z = 0;
@@ -145,16 +145,16 @@ public class AgentMove : MonoBehaviour
 
         if (onFirstRoad && distTravelled == 0)
         {
-            if (curRoad.transform.rotation.y == 90)
+            if (curRoad.transform.rotation.eulerAngles.y == 90)
             {
                 if (transform.position.x > workplace_x)
                 {
                     direction = 3;
-                    firstRoadDistToCross = transform.position.x - (curRoad.transform.position.x - curRoad.GetComponent<Collider>().bounds.size.z / 2) - curRoad.GetComponent<Collider>().bounds.size.x / 2;
+                    firstRoadDistToCross = transform.position.x - (curRoad.transform.position.x - curRoad.GetComponent<Collider>().bounds.size.x / 2) - curRoad.GetComponent<Collider>().bounds.size.z / 2;
                 } else
                 {
                     direction = 1;
-                    firstRoadDistToCross = (curRoad.transform.position.x + curRoad.GetComponent<Collider>().bounds.size.z / 2) - curRoad.GetComponent<Collider>().bounds.size.x / 2 - transform.position.x;
+                    firstRoadDistToCross = (curRoad.transform.position.x + curRoad.GetComponent<Collider>().bounds.size.x / 2) - curRoad.GetComponent<Collider>().bounds.size.z / 2 - transform.position.x;
                 }
             } else
             {
@@ -227,8 +227,8 @@ public class AgentMove : MonoBehaviour
         {
             return;
         }
-        if (transform.position.x >= workplace_x - 0.5 && transform.position.x <= workplace_x + 0.5
-            && transform.position.z >= workplace_z - 0.5 && transform.position.z <= workplace_z + 0.5)
+        if (transform.position.x >= workplace_x - 1.5 && transform.position.x <= workplace_x + 1.5
+            && transform.position.z >= workplace_z - 1.5 && transform.position.z <= workplace_z + 1.5)
         {
             status = all_states.inOtherBuilding;
             transform.position = new Vector3(-11, transform.position.y, transform.position.z);
