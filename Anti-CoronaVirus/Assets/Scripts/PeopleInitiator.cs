@@ -9,6 +9,7 @@ public class PeopleInitiator : MonoBehaviour
     public int pplPerHouse = 3;
     private float personY = 0.5f;
     private float spawnOffset = 3;
+    private WorkPlaceManager workPlaceManager;
     private RoadManager roadManager;
     public GameObject startRoad;
     public Vector3 startPos;
@@ -17,6 +18,7 @@ public class PeopleInitiator : MonoBehaviour
     void Start()
     {
         roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
+        workPlaceManager = GameObject.Find("Work Places").GetComponent<WorkPlaceManager>();
         StartCoroutine(waiter());
     }
 
@@ -28,8 +30,8 @@ public class PeopleInitiator : MonoBehaviour
 
     IEnumerator waiter()
     {
-        yield return new WaitForSeconds(3);
-        startRoad = findNearestStartRoad(transform.position);
+        yield return new WaitForSeconds(10);
+        startRoad = FindNearestStartRoad(transform.position);
         startPos = CalculateStartPos(transform.position, startRoad);
 
         List<AgentMove> agentMoveScriptsList = new List<AgentMove>();
@@ -47,7 +49,8 @@ public class PeopleInitiator : MonoBehaviour
 
         for (int i = 0; i < pplPerHouse; i++)
         {
-            agentMoveScriptsList[i].Setup(0, 0, transform.position.x, transform.position.z, 5);
+            int workPlaceIdx = Random.Range(0, workPlaceManager.workPlaces.Count);
+            agentMoveScriptsList[i].Setup(gameObject, workPlaceManager.workPlaces[workPlaceIdx], 5);
         }
 
         for (int i = 0; i < pplPerHouse; i++)
@@ -95,7 +98,7 @@ public class PeopleInitiator : MonoBehaviour
         }
     }
 
-    GameObject findNearestStartRoad(Vector3 pos)
+    GameObject FindNearestStartRoad(Vector3 pos)
     {
 
         if(roadManager.roads.Count == 0)
@@ -109,15 +112,6 @@ public class PeopleInitiator : MonoBehaviour
 
         foreach (GameObject road in roadManager.roads)
         {
-            //if (road.transform.rotation.eulerAngles.y == 90)
-            //{
-            //    dist = Mathf.Abs(pos.z - road.transform.position.z);
-            //}
-            //else
-            //{
-            //    dist = Mathf.Abs(pos.x - road.transform.position.x);
-            //}
-
             dist = Mathf.Abs(pos.z - road.transform.position.z) + Mathf.Abs(pos.x - road.transform.position.x);
 
             Debug.Log(road.name);
