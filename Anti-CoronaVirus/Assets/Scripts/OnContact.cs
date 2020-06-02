@@ -15,4 +15,13 @@ public class OnContact : MonoBehaviour
     {
         
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+
+        if (other.gameObject.GetComponent<MeshRenderer>().material.color == Color.red)
+        {
+            gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+        }
+    }
 }

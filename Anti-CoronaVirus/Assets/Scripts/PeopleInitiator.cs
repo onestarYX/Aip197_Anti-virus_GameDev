@@ -30,7 +30,7 @@ public class PeopleInitiator : MonoBehaviour
 
     IEnumerator waiter()
     {
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(5);
         startRoad = FindNearestStartRoad(transform.position);
         startPos = CalculateStartPos(transform.position, startRoad);
 
@@ -42,6 +42,10 @@ public class PeopleInitiator : MonoBehaviour
             float initPosZ = Random.Range(transform.position.z - spawnOffset, transform.position.z + spawnOffset);
             Vector3 initPos = new Vector3(initPosX, 0.5f, initPosZ);
             GameObject newPerson = Instantiate(personPrefab, initPos, personPrefab.transform.rotation);
+            if (Random.Range(0.0f, 1.0f) < 0.05f)
+            {
+                newPerson.GetComponent<MeshRenderer>().material.color = Color.red;
+            }
             people.Add(newPerson);
             AgentMove agentMoveScript = newPerson.GetComponent<AgentMove>();
             agentMoveScriptsList.Add(agentMoveScript);
