@@ -78,16 +78,16 @@ public class AgentMove : MonoBehaviour
         switch (direction)
         {
             case 0:
-                transform.Translate(Vector3.forward * Time.deltaTime * speed);
+                transform.Translate(Vector3.forward * speed);
                 break;
             case 1:
-                transform.Translate(Vector3.right * Time.deltaTime * speed);
+                transform.Translate(Vector3.right * speed);
                 break;
             case 2:
-                transform.Translate(Vector3.forward * Time.deltaTime * -speed);
+                transform.Translate(Vector3.forward * -speed);
                 break;
             case 3:
-                transform.Translate(Vector3.right * Time.deltaTime * -speed);
+                transform.Translate(Vector3.right * -speed);
                 break;
             default:
                 break;
@@ -96,7 +96,7 @@ public class AgentMove : MonoBehaviour
         // Keep the distance that the agent has travelled on the current road.
         if (status == all_states.onRoad)
         {
-            distTravelled += Time.deltaTime * speed;
+            distTravelled += speed;
         }
 
     }
@@ -122,10 +122,10 @@ public class AgentMove : MonoBehaviour
     {
         if (status == all_states.atHome || status == all_states.inOtherBuilding)
         {
-            speed = 2.0f;
+            speed = 0.02f;
         } else
         {
-            speed = 10.0f;
+            speed = 0.1f;
         }
     }
 
@@ -230,23 +230,27 @@ public class AgentMove : MonoBehaviour
         // not the agent has reached this first crossing.
         if (onFirstRoad && distTravelled >= firstRoadDistToCross)
         {
-            Debug.Log("Condition2");
             curRoad = SwitchRoad();
             onFirstRoad = false;
             // Reset distTravelled to 0 since the agent is switching to a new road.
             distTravelled = 0;
+            float roadLen = Mathf.Abs(curRoad.GetComponent<Collider>().bounds.size.x - curRoad.GetComponent<Collider>().bounds.size.z);
             if (curRoad.transform.position.x < transform.position.x - 2.5)
             {
                 direction = 3;
+                transform.position = new Vector3(curRoad.transform.position.x + roadLen / 2, transform.position.y, curRoad.transform.position.z);
             } else if (curRoad.transform.position.x > transform.position.x + 2.5)
             {
                 direction = 1;
+                transform.position = new Vector3(curRoad.transform.position.x - roadLen / 2, transform.position.y, curRoad.transform.position.z);
             } else if (curRoad.transform.position.z < transform.position.z - 2.5)
             {
                 direction = 2;
+                transform.position = new Vector3(curRoad.transform.position.x, transform.position.y, curRoad.transform.position.z + roadLen / 2);
             } else
             {
                 direction = 0;
+                transform.position = new Vector3(curRoad.transform.position.x, transform.position.y, curRoad.transform.position.z - roadLen / 2);
             }
             return;
         }
@@ -255,24 +259,28 @@ public class AgentMove : MonoBehaviour
         // Now the max distance we are checking against distTravelled should be the length of the road.
         if (!onFirstRoad && distTravelled >= Mathf.Abs(curRoad.GetComponent<Collider>().bounds.size.x - curRoad.GetComponent<Collider>().bounds.size.z))
         {
-            Debug.Log("Condition3");
             curRoad = SwitchRoad();
             distTravelled = 0;
+            float roadLen = Mathf.Abs(curRoad.GetComponent<Collider>().bounds.size.x - curRoad.GetComponent<Collider>().bounds.size.z);
             if (curRoad.transform.position.x < transform.position.x - 2.5)
             {
                 direction = 3;
+                transform.position = new Vector3(curRoad.transform.position.x + roadLen / 2, transform.position.y, curRoad.transform.position.z);
             }
             else if (curRoad.transform.position.x > transform.position.x + 2.5)
             {
                 direction = 1;
+                transform.position = new Vector3(curRoad.transform.position.x - roadLen / 2, transform.position.y, curRoad.transform.position.z);
             }
             else if (curRoad.transform.position.z < transform.position.z - 2.5)
             {
                 direction = 2;
+                transform.position = new Vector3(curRoad.transform.position.x, transform.position.y, curRoad.transform.position.z + roadLen / 2);
             }
             else if (curRoad.transform.position.z > transform.position.z + 2.5)
             {
                 direction = 0;
+                transform.position = new Vector3(curRoad.transform.position.x, transform.position.y, curRoad.transform.position.z - roadLen / 2);
             } else
             {
                 Debug.LogError("Error in updating direction");
@@ -383,29 +391,4 @@ public class AgentMove : MonoBehaviour
         return candidateRoads[0];
     }
 
-    //void OnTriggerEnter(Collider other)
-    //{
-    //    switch (direction)
-    //    {
-    //        case 0:
-    //            direction = 2;
-    //            break;
-    //        case 1:
-    //            direction = 3;
-    //            break;
-    //        case 2:
-    //            direction = 0;
-    //            break;
-    //        case 3:
-    //            direction = 1;
-    //            break;
-    //        default:
-    //            break;
-    //    }
-
-    //    if(other.gameObject.GetComponent<MeshRenderer>().material.color == Color.red)
-    //    {
-    //        gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
-    //    }
-    //}
 }

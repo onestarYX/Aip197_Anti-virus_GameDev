@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OnContact : MonoBehaviour
 {
+    public float infectionP = 0.3f;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +22,10 @@ public class OnContact : MonoBehaviour
 
         if (other.gameObject.GetComponent<MeshRenderer>().material.color == Color.red)
         {
-            gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+            if (Random.Range(0.0f, 1.0f) < infectionP)
+            {
+                gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+            }
         }
     }
 }
