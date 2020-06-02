@@ -19,12 +19,25 @@ public class AgentMove : MonoBehaviour
     private float speed;
     // Agent's workplace position.
     public GameObject workPlace;
-    public float workplace_x = 0;
-    public float workplace_z = 0;
+    public float workplace_x;
+    public float workplace_z;
+    public GameObject workplace_startRoad;
     // Agent's house's position.
     public GameObject house;
     public float house_x;
     public float house_z;
+    public GameObject house_startRoad;
+
+    public int gotoWork_min;
+    public int gotoWork_hour;
+    public int goHome_min;
+    public int goHome_hour;
+
+    public float start_x;
+    public float start_z;
+    public float dest_x;
+    public float dest_z;
+
     // The distance/range that an agent can move away from the center of their houses. Whenever the agent
     // moves out of the range, we will invert its direction.
     private float inHouseRange;
@@ -39,28 +52,22 @@ public class AgentMove : MonoBehaviour
     public float distTravelled = 0;
     // The reference to the RoadManager class.
     private RoadManager roadManager;
+    // The reference to the GameManager class.
+    private GameManager gameManager;
     // The road that the agent is currently moving on.
     public GameObject curRoad;
 
-
-    /* This is the method that is used to initialize the workplace and house coordinates by the agent's house object. */
-    public void Setup(GameObject house_p, GameObject workPlace_p, float inHouseRange_p)
-    {
-        house = house_p;
-        workPlace = workPlace_p;
-        WorkPlace workPlaceScript = workPlace.GetComponent<WorkPlace>();
-        workplace_x = workPlaceScript.addressOnRoad.x;
-        workplace_z = workPlaceScript.addressOnRoad.z;
-        house_x = house_p.transform.position.x;
-        house_z = house_p.transform.position.z;
-        inHouseRange = inHouseRange_p;
-    }
 
     // Start is called before the first frame update
     void Start()
     {
         // Assign the RoadManager object after the game starts.
         roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        gotoWork_min = Random.Range(0, 60);
+        gotoWork_hour = 7;
+        goHome_min = Random.Range(0, 60);
+        goHome_hour = 18;
     }
 
     // Update is called once per frame
@@ -71,6 +78,18 @@ public class AgentMove : MonoBehaviour
         // 1: right
         // 2: down
         // 3: left
+
+        if (gameManager.minute == gotoWork_min && gameManager.hour == gotoWork_hour)
+        {
+            Debug.Log("Entered gotoWork");
+            SetOnRoad(house_startRoad, house_x, house_z, workplace_x, workplace_z);
+        }
+
+        if (gameManager.minute == goHome_min && gameManager.hour == goHome_hour)
+        {
+            SetOnRoad(workplace_startRoad, workplace_x, workplace_z, house_x, house_z);
+        }
+
         UpdateDirection();
         CheckArrived();
         UpdateSpeed();
@@ -102,19 +121,43 @@ public class AgentMove : MonoBehaviour
     }
 
 
+    /* This is the method that is used to initialize the workplace and house coordinates by the agent's house object. */
+    public void Setup(GameObject house_p, GameObject workPlace_p, float inHouseRange_p)
+    {
+        house = house_p;
+        PeopleInitiator peopleInitiatorScript = house.GetComponent<PeopleInitiator>();
+        house_startRoad = peopleInitiatorScript.startRoad;
+        house_x = peopleInitiatorScript.startPos.x;
+        house_z = peopleInitiatorScript.startPos.z;
+
+        workPlace = workPlace_p;
+        WorkPlace workPlaceScript = workPlace.GetComponent<WorkPlace>();
+        workplace_startRoad = workPlaceScript.nearestRoad;
+        workplace_x = workPlaceScript.addressOnRoad.x;
+        workplace_z = workPlaceScript.addressOnRoad.z;
+
+        inHouseRange = inHouseRange_p;
+    }
+
     /* This is method to change the agent's status from atHome to onRoad. Called by the agent's house object.
      * Param: 
      *      road -- the first road that the agent will travel on
      *      startPos -- the position at the first road that the agent will start at.
      */
-    public void SetOnRoad(GameObject road, Vector3 startPos)
+    public void SetOnRoad(GameObject road, float start_x_p, float start_z_p, float dest_x_p, float dest_z_p)
     {
+        start_x = start_x_p;
+        start_z = start_z_p;
+        dest_x = dest_x_p;
+        dest_z = dest_z_p;
+        Vector3 startPos = new Vector3(start_x, transform.position.y, start_z);
         transform.position = startPos;
         curRoad = road;
         status = all_states.onRoad;
         onFirstRoad = true;
         distTravelled = 0;
     }
+
 
     /* This is the method to update the agent's speed. The speed will change according to the agent's status.
      * This method will be called in every frame. */
@@ -153,16 +196,16 @@ public class AgentMove : MonoBehaviour
         // If the agent is at home, we just check whether or not the agent is out of range. If it is, invert its current direction.
         if (status == all_states.atHome)
         {
-            if (transform.position.x > house_x + inHouseRange)
+            if (transform.position.x > house.transform.position.x + inHouseRange)
             {
                 direction = 3;
-            } else if (transform.position.x < house_x - inHouseRange)
+            } else if (transform.position.x < house.transform.position.x - inHouseRange)
             {
                 direction = 1;
-            } else if (transform.position.z > house_z + inHouseRange)
+            } else if (transform.position.z > house.transform.position.z + inHouseRange)
             {
                 direction = 2;
-            } else if (transform.position.z < house_z - inHouseRange)
+            } else if (transform.position.z < house.transform.position.z - inHouseRange)
             {
                 direction = 0;
             }
@@ -199,7 +242,7 @@ public class AgentMove : MonoBehaviour
             // For horizontal road.
             if (curRoad.transform.rotation.eulerAngles.y == 90)
             {
-                if (transform.position.x > workplace_x)
+                if (transform.position.x > dest_x)
                 {
                     direction = 3;
                     // Calculate the max distance the agent can travel on its first road of the trip.
@@ -212,7 +255,7 @@ public class AgentMove : MonoBehaviour
             // For vertical road.
             } else
             {
-                if (transform.position.z > workplace_z)
+                if (transform.position.z > dest_z)
                 {
                     direction = 2;
                     firstRoadDistToCross = transform.position.z - (curRoad.transform.position.z - curRoad.GetComponent<Collider>().bounds.size.z / 2) - curRoad.GetComponent<Collider>().bounds.size.x / 2;
@@ -297,11 +340,19 @@ public class AgentMove : MonoBehaviour
         {
             return;
         }
-        if (transform.position.x >= workplace_x - 1.5 && transform.position.x <= workplace_x + 1.5
-            && transform.position.z >= workplace_z - 1.5 && transform.position.z <= workplace_z + 1.5)
+        if (transform.position.x >= dest_x - 1.5 && transform.position.x <= dest_x + 1.5
+            && transform.position.z >= dest_z - 1.5 && transform.position.z <= dest_z + 1.5)
         {
-            status = all_states.inOtherBuilding;
-            transform.position = new Vector3(workPlace.transform.position.x, transform.position.y, workPlace.transform.position.z);
+            if (dest_x == workplace_x)
+            {
+                status = all_states.inOtherBuilding;
+                transform.position = new Vector3(workPlace.transform.position.x, transform.position.y, workPlace.transform.position.z);
+            } else
+            {
+                status = all_states.atHome;
+                transform.position = new Vector3(house.transform.position.x, transform.position.y, house.transform.position.z);
+            }
+
         }
     }
 
@@ -359,7 +410,7 @@ public class AgentMove : MonoBehaviour
             }
         }
 
-        if (transform.position.x > workplace_x)
+        if (transform.position.x > dest_x)
         {
             if (leftRoadIndex != -1)
             {
@@ -373,7 +424,7 @@ public class AgentMove : MonoBehaviour
             }
         }
 
-        if (transform.position.z > workplace_z)
+        if (transform.position.z > dest_z)
         {
             if (downRoadIndex != -1)
             {

@@ -13,7 +13,7 @@ public class WorkPlace : MonoBehaviour
     void Start()
     {
         roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
-        StartCoroutine(timer());
+        StartCoroutine(Init());
     }
 
     // Update is called once per frame
@@ -22,10 +22,6 @@ public class WorkPlace : MonoBehaviour
         
     }
 
-    public Vector3 getAddress()
-    {
-        return addressOnRoad;
-    }
 
     Vector3 CalculateAddress(Vector3 pos, GameObject road)
     {
@@ -97,7 +93,7 @@ public class WorkPlace : MonoBehaviour
         return roadToReturn;
     }
 
-    IEnumerator timer()
+    IEnumerator Init()
     {
         yield return new WaitForSeconds(2);
         nearestRoad = FindNearestRoad(transform.position);

@@ -6,35 +6,39 @@ public class PeopleInitiator : MonoBehaviour
 {
     public GameObject personPrefab;
     public List<GameObject> people = new List<GameObject>();
+    List<AgentMove> agentMoveScriptsList = new List<AgentMove>();
     public int pplPerHouse = 3;
+
     private float personY = 0.5f;
     private float spawnOffset = 3;
     private WorkPlaceManager workPlaceManager;
     private RoadManager roadManager;
+    private GameManager gameManager;
+
     public GameObject startRoad;
     public Vector3 startPos;
+
 
     // Start is called before the first frame update
     void Start()
     {
         roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
         workPlaceManager = GameObject.Find("Work Places").GetComponent<WorkPlaceManager>();
-        StartCoroutine(waiter());
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        StartCoroutine(Init());
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    IEnumerator waiter()
+    IEnumerator Init()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
         startRoad = FindNearestStartRoad(transform.position);
         startPos = CalculateStartPos(transform.position, startRoad);
-
-        List<AgentMove> agentMoveScriptsList = new List<AgentMove>();
 
         for (int i = 0; i < pplPerHouse; i++)
         {
@@ -57,12 +61,8 @@ public class PeopleInitiator : MonoBehaviour
             agentMoveScriptsList[i].Setup(gameObject, workPlaceManager.workPlaces[workPlaceIdx], 5);
         }
 
-        for (int i = 0; i < pplPerHouse; i++)
-        {
-            yield return new WaitForSeconds(3);
-            agentMoveScriptsList[i].SetOnRoad(startRoad, startPos);
-        }
     }
+
 
     Vector3 CalculateStartPos(Vector3 housePos, GameObject startRoad)
     {

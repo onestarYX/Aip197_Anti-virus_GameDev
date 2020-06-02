@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI dayText;
     public TextMeshProUGUI timeText;
     private int timePassed;
-    private int minute;
-    private int hour;
+    public int minute;
+    public int hour;
     private int day;
     private string minStr;
     private string hourStr;
