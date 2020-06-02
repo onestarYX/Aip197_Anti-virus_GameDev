@@ -233,6 +233,7 @@ MonoBehaviour:
   people: []
   pplPerHouse: 5
   startRoad: {fileID: 0}
+  startPos: {x: 0, y: 0, z: 0}
 --- !u!1 &4730031694922695239
 GameObject:
   m_ObjectHideFlags: 0
