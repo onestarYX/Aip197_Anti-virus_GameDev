@@ -81,7 +81,6 @@ public class AgentMove : MonoBehaviour
 
         if (gameManager.minute == gotoWork_min && gameManager.hour == gotoWork_hour)
         {
-            Debug.Log("Entered gotoWork");
             SetOnRoad(house_startRoad, house_x, house_z, workplace_x, workplace_z);
         }
 
@@ -165,10 +164,10 @@ public class AgentMove : MonoBehaviour
     {
         if (status == all_states.atHome || status == all_states.inOtherBuilding)
         {
-            speed = 0.02f;
+            speed = 0.04f;
         } else
         {
-            speed = 0.1f;
+            speed = 0.2f;
         }
     }
 
@@ -410,17 +409,19 @@ public class AgentMove : MonoBehaviour
             }
         }
 
+        int goodRoadIdx1 = -1;
+        int goodRoadIdx2 = -1;
         if (transform.position.x > dest_x)
         {
             if (leftRoadIndex != -1)
             {
-                return candidateRoads[leftRoadIndex];
+                goodRoadIdx1 = leftRoadIndex;
             }
         } else
         {
             if (rightRoadIndex != -1)
             {
-                return candidateRoads[rightRoadIndex];
+                goodRoadIdx1 = rightRoadIndex;
             }
         }
 
@@ -428,18 +429,38 @@ public class AgentMove : MonoBehaviour
         {
             if (downRoadIndex != -1)
             {
-                return candidateRoads[downRoadIndex];
+                goodRoadIdx2 = downRoadIndex;
             }
         } else
         {
             if (upRoadIndex != -1)
             {
-                return candidateRoads[upRoadIndex];
+                goodRoadIdx2 = upRoadIndex;
             }
         }
 
-        Debug.Log("There is only one road to select");
-        return candidateRoads[0];
+        if(goodRoadIdx1 == -1 && goodRoadIdx2 == -1)
+        {
+            Debug.Log("There is only one road to select");
+            return candidateRoads[0];
+        } else if(goodRoadIdx1 != -1 && goodRoadIdx2 == -1)
+        {
+            return candidateRoads[goodRoadIdx1];
+        } else if(goodRoadIdx1 == -1 && goodRoadIdx2 != -1)
+        {
+            return candidateRoads[goodRoadIdx2];
+        } else
+        {
+            if(Random.Range(0.0f, 1.0f) < 0.5f)
+            {
+                return candidateRoads[goodRoadIdx1];
+            } else
+            {
+                return candidateRoads[goodRoadIdx2];  
+            }
+        }
+
+
     }
 
 }

@@ -12,7 +12,7 @@ public class WorkPlaceManager : MonoBehaviour
         foreach (Transform child in transform)
         {
             workPlaces.Add(child.gameObject);
-            Debug.Log("Adding road");
+            Debug.Log("Adding WorkPlace");
         }
     }
 

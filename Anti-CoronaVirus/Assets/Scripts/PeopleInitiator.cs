@@ -70,16 +70,11 @@ public class PeopleInitiator : MonoBehaviour
         {
             if (housePos.x < (startRoad.transform.position.x - startRoad.GetComponent<Collider>().bounds.size.x / 2 + startRoad.GetComponent<Collider>().bounds.size.z / 2))
             {
-                Debug.Log("LeftBound");
                 float startPosX = startRoad.transform.position.x - startRoad.GetComponent<Collider>().bounds.size.x / 2 + startRoad.GetComponent<Collider>().bounds.size.z / 2;
-                Debug.Log(startRoad.GetComponent<Collider>().bounds.size.z / 2);
-                Debug.Log(startRoad.GetComponent<Collider>().bounds.size.x / 2);
                 return new Vector3(startPosX, personY, startRoad.transform.position.z);
             } else if (housePos.x > (startRoad.transform.position.x + startRoad.GetComponent<Collider>().bounds.size.x / 2 - startRoad.GetComponent<Collider>().bounds.size.z / 2))
             {
-                Debug.Log("RightBound");
                 float startPosX = startRoad.transform.position.x + startRoad.GetComponent<Collider>().bounds.size.x / 2 - startRoad.GetComponent<Collider>().bounds.size.z / 2;
-                Debug.Log(startPosX);
                 return new Vector3(startPosX, personY, startRoad.transform.position.z);
             } else
             {
@@ -118,9 +113,9 @@ public class PeopleInitiator : MonoBehaviour
         {
             dist = Mathf.Abs(pos.z - road.transform.position.z) + Mathf.Abs(pos.x - road.transform.position.x);
 
-            Debug.Log(road.name);
-            Debug.Log(road.transform.rotation.eulerAngles);
-            Debug.Log(dist);
+            //Debug.Log(road.name);
+            //Debug.Log(road.transform.rotation.eulerAngles);
+            //Debug.Log(dist);
 
             if (dist < minDist)
             {

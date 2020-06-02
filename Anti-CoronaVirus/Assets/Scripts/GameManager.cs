@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timePassed += 2;
+        timePassed += 5;
         if(timePassed % 60 == 0)
         {
             minute++;

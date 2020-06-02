@@ -11,7 +11,7 @@ public class HouseManager : MonoBehaviour
         foreach (Transform child in transform)
         {
             houses.Add(child.gameObject);
-            Debug.Log("Adding road");
+            Debug.Log("Adding House");
         }
     }
 
