@@ -10,7 +10,8 @@ public enum all_states
 {
     atHome = 0,
     onRoad = 1,
-    inOtherBuilding = 2
+    atWorkPlace = 2,
+    atHospital = 3
 }
 
 public class AgentMove : MonoBehaviour
@@ -56,7 +57,7 @@ public class AgentMove : MonoBehaviour
     private GameManager gameManager;
     // The road that the agent is currently moving on.
     public GameObject curRoad;
-
+    private Health healthScript;
 
     // Start is called before the first frame update
     void Start()
@@ -64,6 +65,7 @@ public class AgentMove : MonoBehaviour
         // Assign the RoadManager object after the game starts.
         roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        healthScript = GetComponent<Health>();
         gotoWork_min = Random.Range(0, 60);
         gotoWork_hour = 7;
         goHome_min = Random.Range(0, 60);
@@ -73,18 +75,23 @@ public class AgentMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (status == all_states.atHospital)
+        {
+            return;
+        }
+
         // Up-down angle
         // 0: up
         // 1: right
         // 2: down
         // 3: left
 
-        if (gameManager.minute == gotoWork_min && gameManager.hour == gotoWork_hour)
+        if (gameManager.minute == gotoWork_min && gameManager.hour == gotoWork_hour && status == all_states.atHome)
         {
             SetOnRoad(house_startRoad, house_x, house_z, workplace_x, workplace_z);
         }
 
-        if (gameManager.minute == goHome_min && gameManager.hour == goHome_hour)
+        if (gameManager.minute == goHome_min && gameManager.hour == goHome_hour && status == all_states.atWorkPlace)
         {
             SetOnRoad(workplace_startRoad, workplace_x, workplace_z, house_x, house_z);
         }
@@ -162,9 +169,12 @@ public class AgentMove : MonoBehaviour
      * This method will be called in every frame. */
     void UpdateSpeed()
     {
-        if (status == all_states.atHome || status == all_states.inOtherBuilding)
+        if (status == all_states.atHome || status == all_states.atWorkPlace)
         {
             speed = 0.04f;
+        } else if (status == all_states.atHospital)
+        {
+            speed = 0;
         } else
         {
             speed = 0.2f;
@@ -173,7 +183,7 @@ public class AgentMove : MonoBehaviour
 
     /* This is the method which updates the agent's direction. This method will be called in every frame.
      * When do we need to change the agent's direction? Overall there are two scenarios:
-     *      1. Agent is atHome or inOtherBuilding: In this case we just invert the agent's direction whenever
+     *      1. Agent is atHome or atWorkPlace: In this case we just invert the agent's direction whenever
      *         the agent is out of range.
      *      2. Agent is on the trip to some place:
      *         Then there are three cases that we need to change its direction, or set its direction:
@@ -192,6 +202,11 @@ public class AgentMove : MonoBehaviour
      */
     void UpdateDirection()
     {
+        if (status == all_states.atHospital)
+        {
+            return;
+        }
+
         // If the agent is at home, we just check whether or not the agent is out of range. If it is, invert its current direction.
         if (status == all_states.atHome)
         {
@@ -213,7 +228,7 @@ public class AgentMove : MonoBehaviour
         }
 
         // If the agent is in some other building, we just check whether or not the agent is out of range. If it is, invert its current direction.
-        if (status == all_states.inOtherBuilding)
+        if (status == all_states.atWorkPlace)
         {
             if (transform.position.x > workPlace.transform.position.x + inHouseRange)
             {
@@ -335,7 +350,7 @@ public class AgentMove : MonoBehaviour
      * in every frame. */
     void CheckArrived()
     {
-        if (status == all_states.atHome || status == all_states.inOtherBuilding)
+        if (status == all_states.atHome || status == all_states.atWorkPlace)
         {
             return;
         }
@@ -344,12 +359,19 @@ public class AgentMove : MonoBehaviour
         {
             if (dest_x == workplace_x)
             {
-                status = all_states.inOtherBuilding;
+                status = all_states.atWorkPlace;
                 transform.position = new Vector3(workPlace.transform.position.x, transform.position.y, workPlace.transform.position.z);
-            } else
+            } else if (dest_x == house_x)
             {
                 status = all_states.atHome;
                 transform.position = new Vector3(house.transform.position.x, transform.position.y, house.transform.position.z);
+            } else
+            {
+                status = all_states.atHospital;
+                float spawnX = Random.Range(-20, 20);
+                float spawnZ = Random.Range(-20, 20);
+                transform.position = new Vector3(healthScript.hospitalToGo.transform.position.x + spawnX, transform.position.y, healthScript.hospitalToGo.transform.position.z + spawnZ);
+                healthScript.SetDetected();
             }
 
         }
@@ -441,7 +463,7 @@ public class AgentMove : MonoBehaviour
 
         if(goodRoadIdx1 == -1 && goodRoadIdx2 == -1)
         {
-            Debug.Log("There is only one road to select");
+            //Debug.Log("There is only one road to select");
             return candidateRoads[0];
         } else if(goodRoadIdx1 != -1 && goodRoadIdx2 == -1)
         {

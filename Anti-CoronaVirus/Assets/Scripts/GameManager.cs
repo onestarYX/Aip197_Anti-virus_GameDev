@@ -38,7 +38,6 @@ public class GameManager : MonoBehaviour
         hourStr = "06";
 
         houseManager = GameObject.Find("Residence").GetComponent<HouseManager>();
-        //StartCoroutine(Init());
     }
 
     // Update is called once per frame
@@ -94,7 +93,8 @@ public class GameManager : MonoBehaviour
         deathText.text = "Deaths: " + death;
     }
 
-    //IEnumerator Init()
-    //{
-    //}
+    public int GetCurTime()
+    {
+        return timePassed;
+    }
 }
