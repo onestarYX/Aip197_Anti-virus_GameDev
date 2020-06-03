@@ -7,7 +7,7 @@ public class PeopleInitiator : MonoBehaviour
     public GameObject personPrefab;
     public List<GameObject> people = new List<GameObject>();
     List<AgentMove> agentMoveScriptsList = new List<AgentMove>();
-    public int pplPerHouse = 3;
+    public int pplPerHouse = 5;
 
     private float personY = 0.5f;
     private float spawnOffset = 3;
@@ -46,10 +46,6 @@ public class PeopleInitiator : MonoBehaviour
             float initPosZ = Random.Range(transform.position.z - spawnOffset, transform.position.z + spawnOffset);
             Vector3 initPos = new Vector3(initPosX, 0.5f, initPosZ);
             GameObject newPerson = Instantiate(personPrefab, initPos, personPrefab.transform.rotation);
-            if (Random.Range(0.0f, 1.0f) < 0.05f)
-            {
-                newPerson.GetComponent<MeshRenderer>().material.color = Color.red;
-            }
             people.Add(newPerson);
             AgentMove agentMoveScript = newPerson.GetComponent<AgentMove>();
             agentMoveScriptsList.Add(agentMoveScript);

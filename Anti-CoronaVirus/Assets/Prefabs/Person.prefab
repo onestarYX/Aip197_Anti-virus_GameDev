@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 114809082922345824}
   m_Layer: 0
   m_Name: Person
-  m_TagString: Untagged
+  m_TagString: Person
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c77e9ce019ad00843828f1b02e9c2271, type: 2}
+  - {fileID: 2100000, guid: 53b76c894474cfd49a6d8091910fb8ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,9 +110,19 @@ MonoBehaviour:
   workPlace: {fileID: 0}
   workplace_x: 0
   workplace_z: 0
+  workplace_startRoad: {fileID: 0}
   house: {fileID: 0}
   house_x: 0
   house_z: 0
+  house_startRoad: {fileID: 0}
+  gotoWork_min: 0
+  gotoWork_hour: 0
+  goHome_min: 0
+  goHome_hour: 0
+  start_x: 0
+  start_z: 0
+  dest_x: 0
+  dest_z: 0
   status: 0
   onFirstRoad: 0
   firstRoadDistToCross: 0
@@ -146,3 +156,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3deb1d4f3551b2468cb419d03a1167f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infectionP: 0.1
+  status: 0
+  red: {fileID: 2100000, guid: 9331141d0ac696542b47d26ec531472b, type: 2}
+  green: {fileID: 2100000, guid: 53b76c894474cfd49a6d8091910fb8ee, type: 2}
+  orange: {fileID: 2100000, guid: e50b514936d33e446b02ff200b7caf99, type: 2}
+  blue: {fileID: 2100000, guid: c77e9ce019ad00843828f1b02e9c2271, type: 2}
