@@ -25,16 +25,16 @@ public class Health : MonoBehaviour
     public Material orange;
     public Material blue;
 
-    public const int secPerHr = 3600;
+    private const int secPerHr = 3600;
     public float infectionP = 0.1f;
-    public float normInfectionP = 0.1f;
-    public float normInfectionPWithMask = 0.05f;
-    public float goForTestP = 0.75f;
-    public float fatalityRate = 0.05f;
-    public float initalInfectedRate = 0.01f;
-    public int normIncubationT = 43200;
-    public int normCureT = 86400;
-    public int normContactsPerHr = 1;
+    private float normInfectionP = 0.2f;
+    private float normInfectionPWithMask = 0.1f;
+    private float goForTestP = 0.75f;
+    private float fatalityRate = 0.05f;
+    private float initalInfectedRate = 0.01f;
+    private int normIncubationT = 21600;
+    private int normCureT = 43200;
+    private int normContactsPerHr = 1;
 
     private int infectedTimeStamp = -1;
     public int incubationT;
@@ -43,7 +43,7 @@ public class Health : MonoBehaviour
     public GameObject hospitalToGo;
     private Hospital hospitalScript;
 
-    public int numOfContacts = 1;
+    private int numOfContacts = 1;
 
     // Start is called before the first frame update
     void Start()
