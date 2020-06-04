@@ -25,9 +25,16 @@ public class Health : MonoBehaviour
     public Material orange;
     public Material blue;
 
+    public const int secPerHr = 3600;
     public float infectionP = 0.1f;
+    public float normInfectionP = 0.1f;
+    public float normInfectionPWithMask = 0.05f;
     public float goForTestP = 0.75f;
     public float fatalityRate = 0.05f;
+    public float initalInfectedRate = 0.01f;
+    public int normIncubationT = 43200;
+    public int normCureT = 86400;
+    public int normContactsPerHr = 1;
 
     private int infectedTimeStamp = -1;
     public int incubationT;
@@ -35,6 +42,8 @@ public class Health : MonoBehaviour
     public int sympOnsetTime;
     public GameObject hospitalToGo;
     private Hospital hospitalScript;
+
+    public int numOfContacts = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -49,7 +58,7 @@ public class Health : MonoBehaviour
         hospitalToGo = hospitalManager.hospitals[randHospitalIdx];
         hospitalScript = hospitalToGo.GetComponent<Hospital>();
 
-        if (Random.Range(0.0f, 1.0f) < 0.05f)
+        if (Random.Range(0.0f, 1.0f) < initalInfectedRate)
         {
             status = health_status.infected;
             GetComponent<MeshRenderer>().material = orange;
@@ -71,7 +80,7 @@ public class Health : MonoBehaviour
         {
             int curTime = gameManager.GetCurTime();
             incubationT = curTime - infectedTimeStamp;
-            if (incubationT == 20000)
+            if (incubationT == normIncubationT)
             {
                 Debug.Log("Going to hospital");
                 if(Random.Range(0.0f, 1.0f) < goForTestP)
@@ -94,7 +103,7 @@ public class Health : MonoBehaviour
         {
             int curTime = gameManager.GetCurTime();
             int treatmentT = curTime - detectedTimeStamp;
-            if (treatmentT == 40000)
+            if (treatmentT == normCureT)
             {
                 if(Random.Range(0.0f, 1.0f) < fatalityRate)
                 {
@@ -111,19 +120,24 @@ public class Health : MonoBehaviour
             }
         }
 
-        if (strategy.HasPutOnMask())
+        if(gameManager.GetCurTime() % secPerHr == 0)
         {
-            infectionP = 0.05f;
-        }
-        else
-        {
-            infectionP = 0.1f;
+            numOfContacts = normContactsPerHr;
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (!other.gameObject.CompareTag("Person"))
+        {
+            return;
+        }
+
+        if(numOfContacts > 0)
+        {
+            numOfContacts--;
+        }
+        else
         {
             return;
         }
@@ -136,6 +150,15 @@ public class Health : MonoBehaviour
         health_status other_status = other.gameObject.GetComponent<Health>().status;
         if (other_status == health_status.infected || other_status == health_status.detected)
         {
+            if (strategy.HasPutOnMask())
+            {
+                infectionP = normInfectionPWithMask;
+            }
+            else
+            {
+                infectionP = normInfectionP;
+            }
+
             if (Random.Range(0.0f, 1.0f) < infectionP )
             {
                 status = health_status.infected;

@@ -38,7 +38,7 @@ public class HouseManager : MonoBehaviour
         foreach(GameObject house in houses)
         {
             PeopleInitiator peopleInitScript = house.GetComponent<PeopleInitiator>();
-            population += peopleInitScript.pplPerHouse;
+            population += peopleInitScript.GetPplPerHouse();
         }
         return population;
     }

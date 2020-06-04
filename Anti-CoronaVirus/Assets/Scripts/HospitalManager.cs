@@ -12,7 +12,7 @@ public class HospitalManager : MonoBehaviour
         foreach (Transform child in transform)
         {
             hospitals.Add(child.gameObject);
-            Debug.Log("Adding WorkPlace");
+            Debug.Log("Adding Hospitals");
         }
     }
 

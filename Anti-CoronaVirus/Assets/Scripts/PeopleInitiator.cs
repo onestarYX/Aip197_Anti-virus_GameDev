@@ -7,7 +7,7 @@ public class PeopleInitiator : MonoBehaviour
     public GameObject personPrefab;
     public List<GameObject> people = new List<GameObject>();
     List<AgentMove> agentMoveScriptsList = new List<AgentMove>();
-    public int pplPerHouse = 5;
+    private int pplPerHouse = 10;
 
     private float personY = 0.5f;
     private float spawnOffset = 3;
@@ -125,6 +125,11 @@ public class PeopleInitiator : MonoBehaviour
             Debug.LogError("error in finding min dist road");
         }
         return roadToReturn;
+    }
+
+    public int GetPplPerHouse()
+    {
+        return pplPerHouse;
     }
 
 }

@@ -71,7 +71,7 @@ public class AgentMove : MonoBehaviour
         gotoWork_min = Random.Range(0, 60);
         gotoWork_hour = 7;
         goHome_min = Random.Range(0, 60);
-        goHome_hour = 18;
+        goHome_hour = 17;
 
         InvokeRepeating("RandomChangeDirection", 1f, 1f);
     }
