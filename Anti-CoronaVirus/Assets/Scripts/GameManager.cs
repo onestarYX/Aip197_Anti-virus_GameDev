@@ -43,6 +43,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Globals.gameIsPaused)
+        {
+            return;
+        }
+
         timePassed += 5;
         if(timePassed % 60 == 0)
         {

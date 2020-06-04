@@ -58,6 +58,7 @@ public class AgentMove : MonoBehaviour
     // The road that the agent is currently moving on.
     public GameObject curRoad;
     private Health healthScript;
+    private Strategy strategy;
 
     // Start is called before the first frame update
     void Start()
@@ -65,11 +66,14 @@ public class AgentMove : MonoBehaviour
         // Assign the RoadManager object after the game starts.
         roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        strategy = GameObject.Find("Game Manager").GetComponent<Strategy>();
         healthScript = GetComponent<Health>();
         gotoWork_min = Random.Range(0, 60);
         gotoWork_hour = 7;
         goHome_min = Random.Range(0, 60);
         goHome_hour = 18;
+
+        InvokeRepeating("RandomChangeDirection", 1f, 1f);
     }
 
     // Update is called once per frame
@@ -86,12 +90,15 @@ public class AgentMove : MonoBehaviour
         // 2: down
         // 3: left
 
-        if (gameManager.minute == gotoWork_min && gameManager.hour == gotoWork_hour && status == all_states.atHome)
+        if (gameManager.minute == gotoWork_min && gameManager.hour == gotoWork_hour && gameManager.GetCurTime() % 60 == 0 && status == all_states.atHome)
         {
-            SetOnRoad(house_startRoad, house_x, house_z, workplace_x, workplace_z);
+            if(!strategy.ShouldStayAtHome())
+            {
+                SetOnRoad(house_startRoad, house_x, house_z, workplace_x, workplace_z);
+            }
         }
 
-        if (gameManager.minute == goHome_min && gameManager.hour == goHome_hour && status == all_states.atWorkPlace)
+        if (gameManager.minute == goHome_min && gameManager.hour == goHome_hour && gameManager.GetCurTime() % 60 == 0 && status == all_states.atWorkPlace)
         {
             SetOnRoad(workplace_startRoad, workplace_x, workplace_z, house_x, house_z);
         }
@@ -103,16 +110,16 @@ public class AgentMove : MonoBehaviour
         switch (direction)
         {
             case 0:
-                transform.Translate(Vector3.forward * speed);
+                transform.Translate(Vector3.forward * Time.deltaTime * speed);
                 break;
             case 1:
-                transform.Translate(Vector3.right * speed);
+                transform.Translate(Vector3.right * Time.deltaTime * speed);
                 break;
             case 2:
-                transform.Translate(Vector3.forward * -speed);
+                transform.Translate(Vector3.forward * Time.deltaTime * -speed);
                 break;
             case 3:
-                transform.Translate(Vector3.right * -speed);
+                transform.Translate(Vector3.right * Time.deltaTime * -speed);
                 break;
             default:
                 break;
@@ -121,7 +128,7 @@ public class AgentMove : MonoBehaviour
         // Keep the distance that the agent has travelled on the current road.
         if (status == all_states.onRoad)
         {
-            distTravelled += speed;
+            distTravelled += Time.deltaTime * speed;
         }
 
     }
@@ -171,13 +178,13 @@ public class AgentMove : MonoBehaviour
     {
         if (status == all_states.atHome || status == all_states.atWorkPlace)
         {
-            speed = 0.04f;
+            speed = 8f;
         } else if (status == all_states.atHospital)
         {
             speed = 0;
         } else
         {
-            speed = 0.2f;
+            speed = 30f;
         }
     }
 
@@ -483,6 +490,14 @@ public class AgentMove : MonoBehaviour
         }
 
 
+    }
+
+    void RandomChangeDirection()
+    {
+        if(status == all_states.atHome || status == all_states.atWorkPlace)
+        {
+            direction = Random.Range(0, 4);
+        }
     }
 
 }

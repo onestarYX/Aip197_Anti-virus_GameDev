@@ -17,6 +17,7 @@ public class Health : MonoBehaviour
     private GameManager gameManager;
     private HospitalManager hospitalManager;
     private AgentMove agentMoveScript;
+    private Strategy strategy;
 
     public health_status status = health_status.healthy;
     public Material red;
@@ -40,6 +41,7 @@ public class Health : MonoBehaviour
     {
         houseManager = GameObject.Find("Residence").GetComponent<HouseManager>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        strategy = GameObject.Find("Game Manager").GetComponent<Strategy>();
         hospitalManager = GameObject.Find("Hospitals").GetComponent<HospitalManager>();
         agentMoveScript = GetComponent<AgentMove>();
 
@@ -108,6 +110,15 @@ public class Health : MonoBehaviour
                 }
             }
         }
+
+        if (strategy.HasPutOnMask())
+        {
+            infectionP = 0.05f;
+        }
+        else
+        {
+            infectionP = 0.1f;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -125,7 +136,7 @@ public class Health : MonoBehaviour
         health_status other_status = other.gameObject.GetComponent<Health>().status;
         if (other_status == health_status.infected || other_status == health_status.detected)
         {
-            if (Random.Range(0.0f, 1.0f) < infectionP)
+            if (Random.Range(0.0f, 1.0f) < infectionP )
             {
                 status = health_status.infected;
                 gameObject.GetComponent<MeshRenderer>().material = orange;
