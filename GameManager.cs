@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     private HouseManager houseManager;
     //private StreamWriter writePtr;
     //private FileStream StreamPtr;
+    //1
 
     public TextMeshProUGUI dayText;
     public TextMeshProUGUI timeText;
