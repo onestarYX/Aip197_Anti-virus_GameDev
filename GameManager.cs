@@ -25,13 +25,17 @@ public class GameManager : MonoBehaviour
     private int day;
     private string minStr;
     private string hourStr;
-    private string line;
+    private string line = "Population,Infected,Detected,Recovered,Time Elapsed\n";
 
     private int population;
     private int infected;
     private int detected;
     private int recovered;
     private int death;
+    private int previousPopulation;
+    private int previousInfected;
+    private int previousDetected;
+    private int previousRecovered;
     private string path = @"/Users/mittyhainan/Desktop/Anti-CoronaVirus/Assets/Scripts/temp.csv";
 
     // Start is called before the first frame update
@@ -105,10 +109,16 @@ public class GameManager : MonoBehaviour
         recoveredText.text = "Recovered: " + recovered;
         deathText.text = "Deaths: " + death;
 
-        using(StreamWriter writePtr = new StreamWriter(path)){
-            line = line + string.Format("{0},{1},{2},{3}\n", population.ToString(),
-                infected.ToString(),detected.ToString(),recovered.ToString());
-            writePtr.Write(line);
+        if(previousPopulation != population || previousInfected != infected || previousDetected != detected || previousRecovered != recovered){
+            using(StreamWriter writePtr = new StreamWriter(path)){
+                line = line + string.Format("{0},{1},{2},{3},{4}\n", population.ToString(),
+                    infected.ToString(),detected.ToString(),recovered.ToString(),GetCurTime());
+                writePtr.Write(line);
+            }
+            previousPopulation = population;
+            previousInfected = infected;
+            previousDetected = detected;
+            previousRecovered = recovered;
         }
     }
 
