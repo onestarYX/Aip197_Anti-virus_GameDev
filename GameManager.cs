@@ -25,8 +25,13 @@ public class GameManager : MonoBehaviour
     private int day;
     private string minStr;
     private string hourStr;
-    private string line = "Population,Infected,Detected,Recovered,Time Elapsed\n";
+    private string line = "Population,Infected,Detected,Recovered,Death Toll,Time Elapsed,Infected Rate,Recovered Rate\n";
 
+    private int infected_rate;
+    private int detected_rate;
+    private int deaht_rate;
+
+    private int recover_rate;
     private int population;
     private int infected;
     private int detected;
@@ -36,6 +41,7 @@ public class GameManager : MonoBehaviour
     private int previousInfected;
     private int previousDetected;
     private int previousRecovered;
+    private int previousDeath;
     private string path = @"/Users/mittyhainan/Desktop/Anti-CoronaVirus/Assets/Scripts/temp.csv";
 
     // Start is called before the first frame update
@@ -109,16 +115,23 @@ public class GameManager : MonoBehaviour
         recoveredText.text = "Recovered: " + recovered;
         deathText.text = "Deaths: " + death;
 
-        if(previousPopulation != population || previousInfected != infected || previousDetected != detected || previousRecovered != recovered){
+        if(previousPopulation != population || previousInfected != infected || previousDetected != detected || previousRecovered != recovered || previousDeath != death){
+            if(previousInfected != infected){
+                infected_rate = GetCurTime();
+            }
+            if(previousRecovered != recovered){
+                recover_rate = GetCurTime();
+            }
             using(StreamWriter writePtr = new StreamWriter(path)){
-                line = line + string.Format("{0},{1},{2},{3},{4}\n", population.ToString(),
-                    infected.ToString(),detected.ToString(),recovered.ToString(),GetCurTime());
+                line = line + string.Format("{0},{1},{2},{3},{4},{5},{6},{7}\n", population,
+                    infected,detected,recovered,death,GetCurTime(),infected_rate,recover_rate);
                 writePtr.Write(line);
             }
             previousPopulation = population;
             previousInfected = infected;
             previousDetected = detected;
             previousRecovered = recovered;
+            previousDeath = death;
         }
     }
 
