@@ -26,15 +26,17 @@ public class Health : MonoBehaviour
     public Material blue;
 
     private const int secPerHr = 3600;
-    public float infectionP = 0.1f;
-    private float normInfectionP = 0.2f;
-    private float normInfectionPWithMask = 0.1f;
-    private float goForTestP = 0.75f;
-    private float fatalityRate = 0.05f;
-    private float initalInfectedRate = 0.01f;
-    private int normIncubationT = 21600;
-    private int normCureT = 43200;
-    private int normContactsPerHr = 1;
+
+    public float normInfectionP = SimulationModel.normTransP;
+    public float normInfectionPWithMask = SimulationModel.normTransPMask;
+    public float infectionP = SimulationModel.normTransP;
+
+    public float goForTestP = SimulationModel.goForTestP;
+    public float fatalityRate = SimulationModel.fatalityRate;
+    public float initalInfectedRate = SimulationModel.initialInfectedRate;
+    public int normIncubationT = SimulationModel.normIncubationT;
+    public int normCureT = SimulationModel.normCureT;
+    public int normContactsPerHr = SimulationModel.normContectsPerHr;
 
     private int infectedTimeStamp = -1;
     public int incubationT;
@@ -48,6 +50,8 @@ public class Health : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SimulationModelInit();
+
         houseManager = GameObject.Find("Residence").GetComponent<HouseManager>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         strategy = GameObject.Find("Game Manager").GetComponent<Strategy>();
@@ -71,6 +75,20 @@ public class Health : MonoBehaviour
         }
 
         sympOnsetTime = Random.Range(5, 10);
+    }
+
+    void SimulationModelInit()
+    {
+        normInfectionP = SimulationModel.normTransP;
+        normInfectionPWithMask = SimulationModel.normTransPMask;
+        infectionP = SimulationModel.normTransP;
+        initalInfectedRate = SimulationModel.initialInfectedRate;
+        fatalityRate = SimulationModel.fatalityRate;
+        normIncubationT = SimulationModel.normIncubationT;
+        normCureT = SimulationModel.normCureT;
+        goForTestP = SimulationModel.goForTestP;
+        normContactsPerHr = SimulationModel.normContectsPerHr;
+        normInfectionPWithMask = SimulationModel.normTransPMask;
     }
 
     // Update is called once per frame

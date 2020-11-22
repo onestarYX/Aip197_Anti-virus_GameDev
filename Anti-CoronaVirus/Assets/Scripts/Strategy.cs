@@ -6,19 +6,25 @@ public class Strategy : MonoBehaviour
 {
     public bool stayHome = false;
     public bool putOnMask = false;
-    public float obeySahRate = 0.75f;
-    public float obeyPomRate = 0.8f;
+    public float obeySahRate = SimulationModel.obeySahRate;
+    public float obeyPomRate = SimulationModel.obeyPomRate;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        SimulationModelInit();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void SimulationModelInit()
+    {
+        obeyPomRate = SimulationModel.obeyPomRate;
+        obeySahRate = SimulationModel.obeySahRate;
     }
 
     public void SetStayHome()

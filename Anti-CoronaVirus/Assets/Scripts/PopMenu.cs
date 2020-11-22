@@ -37,4 +37,10 @@ public class PopMenu : MonoBehaviour
         Time.timeScale = 1f;
         Globals.gameIsPaused = false;
     }
+
+    public void QuitProg()
+    {
+        Debug.Log("Quit!");
+        Application.Quit();
+    }
 }

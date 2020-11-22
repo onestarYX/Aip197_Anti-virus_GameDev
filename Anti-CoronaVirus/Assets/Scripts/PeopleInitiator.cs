@@ -7,7 +7,7 @@ public class PeopleInitiator : MonoBehaviour
     public GameObject personPrefab;
     public List<GameObject> people = new List<GameObject>();
     List<AgentMove> agentMoveScriptsList = new List<AgentMove>();
-    private int pplPerHouse = 10;
+    public int pplPerHouse = SimulationModel.pplPerHouse;
 
     private float personY = 0.5f;
     private float spawnOffset = 3;
@@ -25,6 +25,9 @@ public class PeopleInitiator : MonoBehaviour
         roadManager = GameObject.Find("Roads").GetComponent<RoadManager>();
         workPlaceManager = GameObject.Find("Work Places").GetComponent<WorkPlaceManager>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+
+        pplPerHouse = SimulationModel.pplPerHouse;
+
         StartCoroutine(Init());
     }
 
