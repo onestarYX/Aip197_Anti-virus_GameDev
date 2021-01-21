@@ -11,6 +11,7 @@ public static class Globals
 public class PopMenu : MonoBehaviour
 {
     public GameObject strategyMenu;
+    public GameObject instrMenu;
 
     // Start is called before the first frame update
     void Start()
@@ -31,9 +32,23 @@ public class PopMenu : MonoBehaviour
         Globals.gameIsPaused = true;
     }
 
-    public void Resume()
+    public void OnClickIntrBtn()
+    {
+        instrMenu.SetActive(true);
+        Time.timeScale = 0f;
+        Globals.gameIsPaused = true;
+    }
+
+    public void StrategyResume()
     {
         strategyMenu.SetActive(false);
+        Time.timeScale = 1f;
+        Globals.gameIsPaused = false;
+    }
+
+    public void InstrResume()
+    {
+        instrMenu.SetActive(false);
         Time.timeScale = 1f;
         Globals.gameIsPaused = false;
     }
