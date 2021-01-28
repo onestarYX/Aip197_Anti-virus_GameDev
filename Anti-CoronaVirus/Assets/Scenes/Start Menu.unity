@@ -1451,7 +1451,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.026845638, y: 1}
+  m_AnchorMax: {x: 0.040816326, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5206,7 +5206,7 @@ GameObject:
   - component: {fileID: 943870680}
   - component: {fileID: 943870679}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6155,7 +6155,7 @@ GameObject:
   - component: {fileID: 1034581444}
   - component: {fileID: 1034581443}
   m_Layer: 5
-  m_Name: Image
+  m_Name: UCSD_logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6385,7 +6385,7 @@ GameObject:
   - component: {fileID: 1065418522}
   - component: {fileID: 1065418521}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Calit_logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7419,7 +7419,7 @@ GameObject:
   - component: {fileID: 1211123379}
   - component: {fileID: 1211123378}
   m_Layer: 5
-  m_Name: Image
+  m_Name: QI_logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9837,9 +9837,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1548206490}
   m_Direction: 0
   m_MinValue: 1
-  m_MaxValue: 150
+  m_MaxValue: 50
   m_WholeNumbers: 1
-  m_Value: 5
+  m_Value: 3
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -9886,8 +9886,8 @@ RectTransform:
   m_Father: {fileID: 2114541757}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.026845638, y: 0}
-  m_AnchorMax: {x: 0.026845638, y: 1}
+  m_AnchorMin: {x: 0.040816326, y: 0}
+  m_AnchorMax: {x: 0.040816326, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
